@@ -1240,6 +1240,15 @@ stmt		: keyword_alias fitem {SET_LEX_STATE(EXPR_FNAME|EXPR_FITEM);} fitem
 			$$ = dispatch2(rescue_mod, $1, $3);
 		    %*/
 		    }
+		| stmt modifier_rescue exc_list keyword_then stmt
+		    {
+		    /*%%%*/
+			NODE *resq = NEW_RESBODY($3, remove_begin($5), 0);
+			$$ = NEW_RESCUE(remove_begin($1), resq, 0);
+		    /*%
+			$$ = dispatch3(rescue_mod, $1, $3, $5);
+		    %*/
+		    }
 		| keyword_END '{' compstmt '}'
 		    {
 			if (in_def || in_single) {
